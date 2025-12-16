@@ -1,0 +1,76 @@
+import { AnalyticsData, CallInteraction, CallSentiment } from '../types';
+
+export const MOCK_ANALYTICS: AnalyticsData = {
+  totalCalls: 1248,
+  connectionRate: 88.5,
+  avgDuration: '4m 32s',
+  conversionRate: 24.2,
+  volumeData: [
+    { name: 'Mon', calls: 120 },
+    { name: 'Tue', calls: 155 },
+    { name: 'Wed', calls: 180 },
+    { name: 'Thu', calls: 145 },
+    { name: 'Fri', calls: 190 },
+    { name: 'Sat', calls: 80 },
+    { name: 'Sun', calls: 60 },
+  ],
+};
+
+export const MOCK_INTERACTIONS: CallInteraction[] = [
+  {
+    id: 'c_1',
+    customerName: 'Alice Johnson',
+    agentName: 'Sarah Miller',
+    date: 'Oct 24, 10:30 AM',
+    duration: '5m 12s',
+    sentiment: CallSentiment.POSITIVE,
+    tags: ['Upgrade', 'Resolved'],
+  },
+  {
+    id: 'c_2',
+    customerName: 'Michael Chen',
+    agentName: 'David Kim',
+    date: 'Oct 24, 11:15 AM',
+    duration: '3m 45s',
+    sentiment: CallSentiment.NEUTRAL,
+    tags: ['Inquiry'],
+  },
+  {
+    id: 'c_3',
+    customerName: 'Emma Davis',
+    agentName: 'Sarah Miller',
+    date: 'Oct 24, 01:20 PM',
+    duration: '8m 05s',
+    sentiment: CallSentiment.NEGATIVE,
+    tags: ['Complaint', 'Escalated'],
+  },
+  {
+    id: 'c_4',
+    customerName: 'James Wilson',
+    agentName: 'John Doe',
+    date: 'Oct 24, 02:45 PM',
+    duration: '4m 10s',
+    sentiment: CallSentiment.POSITIVE,
+    tags: ['Sales', 'Closed'],
+  },
+  {
+    id: 'c_5',
+    customerName: 'Sophia Brown',
+    agentName: 'David Kim',
+    date: 'Oct 24, 03:30 PM',
+    duration: '2m 55s',
+    sentiment: CallSentiment.NEUTRAL,
+    tags: ['Support'],
+  },
+];
+
+export const MOCK_TRANSCRIPT = [
+  { time: '00:05', speaker: 'Agent', text: 'Thank you for calling Voice AI support. My name is Sarah, how can I help you today?' },
+  { time: '00:12', speaker: 'Customer', text: 'Hi Sarah, I\'m having some trouble with my account dashboard. It seems to be loading very slowly.' },
+  { time: '00:20', speaker: 'Agent', text: 'I apologize for the inconvenience. Let me take a look at that for you. Can you confirm your account ID?' },
+  { time: '00:35', speaker: 'Customer', text: 'Sure, it\'s V-88291.' },
+  { time: '00:45', speaker: 'Agent', text: 'Thank you. I see the issue here. It looks like a cache sync delay. I can reset that from my end.' },
+  { time: '01:10', speaker: 'Customer', text: 'That would be great, thanks.' },
+  { time: '01:30', speaker: 'Agent', text: 'Done! Please refresh your page and let me know if it works now.' },
+  { time: '01:45', speaker: 'Customer', text: 'Wow, that was fast. It works perfectly now. Thank you so much!' },
+];
