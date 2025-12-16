@@ -3,11 +3,12 @@
 
 import { APIAnalysisResponse, CallFromAPI } from "../types";
 
-// Backend URL (Vite environment variable recommended)
-// Add this to `.env.local`:
-// VITE_API_URL=http://localhost:8000
-const BASE =
-  (import.meta.env as any).VITE_API_URL || "http://localhost:8000";
+// Backend URL (Render-safe, NO localhost fallback)
+const BASE = (import.meta.env as any).VITE_API_BASE_URL;
+
+if (!BASE) {
+  throw new Error("VITE_API_BASE_URL is not defined");
+}
 
 /**
  * Helper: Parse JSON or throw a readable error
@@ -53,7 +54,7 @@ export const api = {
   },
 
   /**
-   * Optional: Ping backend
+   * Optional: Ping backend (only if endpoint exists)
    */
   ping: async () => {
     const res = await fetch(`${BASE}/test-mongo`);
