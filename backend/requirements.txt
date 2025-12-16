@@ -1,12 +1,11 @@
-fastapi==0.110.0
-uvicorn==0.27.1
+fastapi
+uvicorn
 python-multipart
 openpyxl
 python-dotenv==1.0.1
 
-# MongoDB (Python 3.13 compatible)
-motor==2.5.1
-pymongo==3.13.0
+# MongoDB (NO MOTOR)
+pymongo==4.10.1
 
 # ML
 torch

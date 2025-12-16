@@ -37,11 +37,9 @@ app.add_middleware(
 async def startup_event():
     try:
         db = mongodb.get_db()
-        await db.command("ping")
+        db.command("ping")
+        mongodb.ensure_indexes()
         print("✅ MongoDB Connected")
-
-        # Auto-delete after expiry
-        await db.calls.create_index("expiresAt", expireAfterSeconds=0)
     except Exception as e:
         print("❌ MongoDB NOT Connected:", e)
 
@@ -66,7 +64,7 @@ async def process_audio_api(file: UploadFile = File(...)):
         with open(temp_path, "wb") as f:
             f.write(await file.read())
 
-        # Run CPU-heavy work in threadpool
+        # CPU heavy → threadpool
         result = await run_in_threadpool(process_uploaded_audio, temp_path)
 
         now = datetime.utcnow()
@@ -86,7 +84,7 @@ async def process_audio_api(file: UploadFile = File(...)):
         }
 
         db = mongodb.get_db()
-        await db.calls.insert_one(doc)
+        db.calls.insert_one(doc)
 
         return {"status": "ok", "call_id": call_id}
 
@@ -104,8 +102,8 @@ async def process_audio_api(file: UploadFile = File(...)):
 async def get_summary():
     db = mongodb.get_db()
 
-    total_calls = await db.calls.count_documents({})
-    positive_calls = await db.calls.count_documents({"sentiment": "positive"})
+    total_calls = db.calls.count_documents({})
+    positive_calls = db.calls.count_documents({"sentiment": "positive"})
 
     rate = round((positive_calls / total_calls) * 100, 2) if total_calls else 0
 
@@ -116,7 +114,7 @@ async def get_summary():
     }
 
 # -------------------------------------------------------
-# WEEKLY STATS + TRENDING TOPICS (FIXED)
+# WEEKLY STATS + TRENDING TOPICS
 # -------------------------------------------------------
 @app.get("/stats/weekly")
 async def get_weekly_stats():
@@ -124,8 +122,8 @@ async def get_weekly_stats():
     start_week = start_of_current_week()
     now = datetime.utcnow()
 
-    total = await db.calls.count_documents({"created_at": {"$gte": start_week}})
-    positive = await db.calls.count_documents({
+    total = db.calls.count_documents({"created_at": {"$gte": start_week}})
+    positive = db.calls.count_documents({
         "created_at": {"$gte": start_week},
         "sentiment": "positive"
     })
@@ -141,7 +139,7 @@ async def get_weekly_stats():
         {"$limit": 10}
     ]
 
-    topics = await db.calls.aggregate(pipeline).to_list(length=10)
+    topics = list(db.calls.aggregate(pipeline))
 
     return {
         "period": "current_week",
@@ -169,7 +167,7 @@ async def get_calls(limit: int = 50, skip: int = 0):
     )
 
     results = []
-    async for doc in cursor:
+    for doc in cursor:
         doc["_id"] = None
         if isinstance(doc.get("created_at"), datetime):
             doc["created_at"] = doc["created_at"].isoformat() + "Z"
@@ -183,7 +181,7 @@ async def get_calls(limit: int = 50, skip: int = 0):
 @app.get("/calls/{call_id}")
 async def get_call(call_id: str):
     db = mongodb.get_db()
-    doc = await db.calls.find_one({"call_id": call_id})
+    doc = db.calls.find_one({"call_id": call_id})
 
     if not doc:
         raise HTTPException(status_code=404, detail="Call not found")
@@ -208,7 +206,7 @@ async def get_calls_by_topic(topic_name: str):
     }).sort("created_at", -1)
 
     results = []
-    async for doc in cursor:
+    for doc in cursor:
         doc["_id"] = None
         if isinstance(doc.get("created_at"), datetime):
             doc["created_at"] = doc["created_at"].isoformat() + "Z"
@@ -221,7 +219,7 @@ async def get_calls_by_topic(topic_name: str):
     }
 
 # -------------------------------------------------------
-# RUN (RENDER SAFE)
+# RUN
 # -------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
