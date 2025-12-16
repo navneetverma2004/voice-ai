@@ -1,8 +1,7 @@
 # mongodb.py
 import os
 from typing import Optional
-from pymongo import MongoClient, ASCENDING, DESCENDING
-from datetime import datetime
+from pymongo import MongoClient, DESCENDING
 
 # -------------------------------------------------------
 # CONFIG
@@ -25,27 +24,26 @@ def get_client() -> MongoClient:
     return _client
 
 def get_db():
-    client = get_client()
-    return client[MONGO_DB_NAME]
+    return get_client()[MONGO_DB_NAME]
 
 # -------------------------------------------------------
-# INDEX SETUP (SYNC VERSION OF YOUR OLD LOGIC)
+# INDEX SETUP
 # -------------------------------------------------------
 def ensure_indexes():
     """
     Create required indexes on startup.
-    Equivalent to your previous async Motor version.
+    Same logic as your previous Motor-based version.
     """
     db = get_db()
     calls = db.calls
 
-    # Unique call_id (same as before)
+    # Unique call_id
     calls.create_index("call_id", unique=True)
 
     # Sort optimization
     calls.create_index([("created_at", DESCENDING)])
 
-    # ✅ TTL auto-delete (same behavior you had)
+    # TTL auto-delete
     calls.create_index(
         "expiresAt",
         expireAfterSeconds=0
