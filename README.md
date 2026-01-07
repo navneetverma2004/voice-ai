@@ -1,11 +1,7 @@
-<div align="center">
-  <img width="1200" height="475" alt="Voice AI Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
 <h1 align="center">🎙️ Voice AI Platform</h1>
 
 <p align="center">
-  A full-stack platform to manage, analyze, and visualize voice call data using Python and MongoDB.
+  A full-stack platform to manage, analyze, and visualize voice call data using a modern web stack.
 </p>
 
 <p align="center">
@@ -20,12 +16,12 @@
 
 ## ✨ Features
 
-- 📊 Interactive dashboards & analytics
+- 📊 Interactive analytics dashboards
 - 🎧 Voice call data management
-- 🧩 Scalable backend with MongoDB
 - ⚡ Fast frontend with Vite
-- 🎨 Clean UI using Tailwind CSS
+- 🎨 Clean and responsive UI
 - 🔌 API-based frontend–backend communication
+- 🧩 Scalable architecture for AI integration
 
 ---
 
@@ -35,13 +31,13 @@
 - React
 - TypeScript
 - Vite
-- Tailwind CSS
+- Tailwind CSS (CDN)
 - Recharts
 - Lucide React
 
 ### Backend
 - Python
-- FastAPI / Flask *(whichever you are using)*
+- FastAPI / Flask
 - MongoDB
 - PyMongo / Motor
 
@@ -61,9 +57,9 @@ voice-ai/
 │   └── vite.config.ts
 │
 ├── backend/           # Python backend
-│   ├── db.py          # MongoDB connection
-│   ├── models.py     # Data models / schemas
-│   ├── routes/       # API routes (if applicable)
+│   ├── db.py
+│   ├── models.py
+│   ├── routes/
 │   ├── requirements.txt
 │   └── main.py
 │
